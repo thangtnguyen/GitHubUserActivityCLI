@@ -2,15 +2,14 @@
 using github_activity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Models;
 using Models.Interfaces;
 using Services;
-
-Console.WriteLine("Hello, World!");
 
 using IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices((context, services) =>
     {
-        //services.Configure<FileDataSourceOptions>(context.Configuration.GetSection(nameof(FileDataSourceOptions)));
+        services.Configure<GitHubInfoOption>(context.Configuration.GetSection(nameof(GitHubInfoOption)));
         services.AddHttpClient<IGithubService, GithubService>();
         services.AddSingleton<IApplication, Application>();
     }).Build();

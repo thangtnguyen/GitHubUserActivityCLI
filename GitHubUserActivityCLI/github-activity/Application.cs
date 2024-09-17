@@ -42,22 +42,29 @@ namespace github_activity
             }
             else
             {
-                var result = _githubService.GetRecentGithubEventsByUserName(args[0]);
-                
-                if (result != null)
-                {                    
-                    var groups = result.GroupBy(p => new { p.Repo.Name, p.Type }).ToList();
-                    foreach (var grp in groups)
+                try
+                {
+                    var result = _githubService.GetRecentGithubEventsByUserName(args[0]);
+
+                    if (result != null)
                     {
-                        if (grp.Key.Type == "ForkEvent")
+                        var groups = result.GroupBy(p => new { p.Repo.Name, p.Type }).ToList();
+                        foreach (var grp in groups)
                         {
-                            Console.WriteLine(string.Format(_messageMapper[grp.Key.Type], grp.Key.Name));
+                            if (grp.Key.Type == "ForkEvent")
+                            {
+                                Console.WriteLine(string.Format(_messageMapper[grp.Key.Type], grp.Key.Name));
+                            }
+                            else
+                            {
+                                Console.WriteLine(string.Format(_messageMapper[grp.Key.Type], grp.Count(), grp.Key.Name));
+                            }
                         }
-                        else
-                        {
-                            Console.WriteLine(string.Format(_messageMapper[grp.Key.Type], grp.Count(), grp.Key.Name));
-                        }                        
                     }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error happens. Please try again.");                    
                 }
             }
         }
